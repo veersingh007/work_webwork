@@ -20,6 +20,7 @@ return (
 <a href="/" className="hover:underline">Home</a>
 <a href="/resume" className="hover:underline">Resume</a>
 <a href="/poc" className="hover:underline">POC</a>
+<a href="/learningpage" className="hover:underline">LEARNING</a> 
 </nav>
 {children}
 </body>
