@@ -22,7 +22,7 @@ export default function Home() {
         </div>
         <div>
           <a href="/poc" className="text-blue-500 underline text-xl">
-            👉 View POC Work (Coming Soon)
+            👉 View POC Center (More comming soon)
           </a>
         </div>
       </section>
