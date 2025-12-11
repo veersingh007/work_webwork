@@ -16,22 +16,26 @@ export default function ImageCropperPOC() {
     const videoStream = await navigator.mediaDevices.getUserMedia({
       video: true,
     });
-    videoRef.current.srcObject = videoStream;
-    setStream(videoStream);
+    if (videoRef.current) {
+      videoRef.current.srcObject = videoStream;
+      setStream(videoStream);
+    }
   };
 
   // Stop camera
   const stopCamera = () => {
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
+      setStream(null); // Hide video when stopped
     }
-    videoRef.current.srcObject = null;
   };
 
   // Capture image from camera
   const captureImage = () => {
     const canvas = canvasRef.current;
     const video = videoRef.current;
+
+    if (!video) return;
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
@@ -84,7 +88,7 @@ export default function ImageCropperPOC() {
 
   return (
     <main className="min-h-screen p-8 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-6">Image Resize/Cropper POC</h1>
+      <h1 className="text-4xl font-bold mb-6">Image Cropper POC</h1>
 
       <div className="space-y-6">
 
@@ -101,13 +105,7 @@ export default function ImageCropperPOC() {
           />
         </div>
 
-        {/* CAMERA AREA */}
-        <video
-          ref={videoRef}
-          autoPlay
-          className="w-full max-w-md rounded shadow"
-        />
-
+        {/* CAMERA CONTROLS */}
         <div className="flex gap-4">
           <button
             onClick={startCamera}
@@ -123,13 +121,22 @@ export default function ImageCropperPOC() {
             Stop Camera
           </button>
 
-          <button
-            onClick={captureImage}
-            className="px-4 py-2 bg-green-600 text-white rounded"
-          >
-            Capture From Camera
-          </button>
+          {stream && (
+            <button
+              onClick={captureImage}
+              className="px-4 py-2 bg-green-600 text-white rounded"
+            >
+              Capture From Camera
+            </button>
+          )}
         </div>
+
+        {/* CAMERA VIDEO VIEW (always in DOM, hidden until stream starts) */}
+        <video
+          ref={videoRef}
+          autoPlay
+          className={`w-full max-w-md rounded shadow mt-4 ${!stream ? "hidden" : ""}`}
+        />
 
         {/* CROPPER AREA */}
         {imageSrc && (
